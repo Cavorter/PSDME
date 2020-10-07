@@ -13,9 +13,13 @@ function Get-Record {
     #>
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $true,ValueFromPipelineByPropertyName=$true)]
+        [Alias("id","sourceId")]
+        [ValidateNotNullOrEmpty()]
+        [ValidateRange("Positive")]
         [int]$ZoneId,
 
+        [Parameter(Mandatory = $true)]
         [pscredential]$Credential,
 
         [ValidateSet("A", "AAAA", "ANAME", "CNAME", "HTTPRED", "MX", "NS", "PTR", "SRV", "TXT", "SPF", "SOA")]
@@ -25,10 +29,7 @@ function Get-Record {
     )
 
     Begin {
-        if ( $Zone ) {
-            $ZoneId = $Zone.id
-        }
-        
+        Write-Host "Zone ID:" $PSBoundParameters["ZoneId"]
         $uriParts = @( ( Get-UriRoot ) , "dns/managed" , $ZoneId , "records" )
         if ( $Id ) { $uriParts += $Id }
         $uri = $uriParts -join '/'

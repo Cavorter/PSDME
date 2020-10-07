@@ -15,8 +15,9 @@ function Get-Zone {
     )
 
     Begin {
-        $uriPrefix = Get-UriRoot
-        $uri = $uriPrefix, "dns/managed/$ID" -join '/'
+        $uriParts = @( ( Get-UriRoot ) , "dns/managed" )
+        if ( $ID ) { $uriParts += $ID }
+        $uri = $uriParts -join '/'
         Write-Verbose "Uri: $uri"
     }
 
@@ -24,7 +25,11 @@ function Get-Zone {
         $headers = New-Header -Credential $Credential -Offset 0
 
         $response = Invoke-RestMethod -Uri $uri -Headers $headers -ContentType "application/json"
-        Write-Output $response.data
+
+        $result = $response
+        if ( -not $ID ) { $result = $response.data }
+        
+        Write-Output $result
     }
 }
 

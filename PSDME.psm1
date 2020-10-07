@@ -1,5 +1,5 @@
 # Variables
-$script:SandboxMode = $false
+$script:SandboxMode = $true
 
 # Classes
 $classes = Get-ChildItem -Path $PSScriptRoot\classes\*.ps1 -Exclude *.Tests.*
