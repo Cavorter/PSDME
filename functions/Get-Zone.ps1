@@ -6,7 +6,6 @@ function Get-Zone {
             A PSCredential object with the username set to the account API-Key and password set to the account Secret.
     #>
     [CmdletBinding()]
-    [OutputType([DMEZone[]])]
     param(
         [Parameter(Mandatory = $true)]
         [pscredential]$Credential,
@@ -25,10 +24,7 @@ function Get-Zone {
         $headers = New-Header -Credential $Credential -Offset 0
 
         $response = Invoke-RestMethod -Uri $uri -Headers $headers -ContentType "application/json"
-        foreach ( $obj in $response.data ) {
-            [DMEZone]$result = $obj
-            $result | Write-Output
-        }
+        Write-Output $response.data
     }
 }
 
