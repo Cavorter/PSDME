@@ -1,42 +1,21 @@
-# PSMadeEasy
-Powershell Module for Dnsmadeeasy API
-This Module was Created in order to automate some DNS processes (like certificate activation and more)
-In order to use it import it to your script - 
-Import-Module .\PSMadeEasy.ps1
+# PSDME
 
-####################################################################################
-BY DEFAULT WILL USE API.SANDBOX URL, TO USE PRODUCTION URL USE "-APIEnvironment api"
-####################################################################################
+This is a wrapper module for the [DNS Made Easy API](https://api-docs.dnsmadeeasy.com/). The codebase is forked from earlier work by [RagingPuppies](https://github.com/RagingPuppies/PSMadeEasy) with substantial changes including use of approved verbs and a more fleshed out module structure. Many thanks to them for doing a pretty solid authentication implementation which saved me a ton of time!
 
-In some cases there is an issue with the time compare between your local time and DNSMadeEasy time, use -offset for fixing that(Miliseconds).
-Example of function with offset:
+While I do intend to come back around to implement tests and finish refactoring the older functions I'm leaving it in the current state since it has the functionality I require for a current project.
 
-DME-GetZones -apikey xcxxcdsc-csdc-sdcsdc-9999-1231231 -secret 1231231231-asd123-asdad1-asd1-acaqsd124312 -offset 222000
+# Usage
 
-That will return PSobject with all the zones under this API account. 
+Be default after loading the module functions will interact with the Sandbox version of the API at DNS Made Easy. To interact with the production API use `Set-DMESandboxMode -Mode Production`. To revert to the Sandbox API use `Set-DMESandboxMode -Mode Sandbox`.
 
-Current functions:
+Most functions require a `-Credential` parameter that should be a PSCredential object with the username set to the account API Key and the password set to the related secret.
 
-DME-Headers - Creates relevant headers for API access.
+**NOTE!** DNS Made Easy does [implement a rate limit](https://api-docs.dnsmadeeasy.com/#f6f3c489-422d-4cf0-bccb-1933e6d655ac) and this module does **NOT CURRENTLY** implement any way to monitor current activity though that should be pretty easy to do later by keeping an eye on the value of `x-dnsmerequestsRemaining` in the response header.
 
-DME-GetZones - Get zones list.
+# Functions
 
-DME-AddZone - Adds a Zone.
-
-DME-AddMultiZones - Creates Multiple Zones at one call.
-
-DME-RemoveMultiZones - Removes Multiple Zones at one call.
-
-DME-GetRecords - Get records by Domain ID.
-
-DME-NewRecord - Adds new record to zone. (supports 'A', 'AAAA', 'ANAME', 'CNAME', 'HTTPRED', 'MX', 'NS', 'PTR', 'SRV', 'TXT', 'SPF','SOA')
-
-DME-UpdateRecord - Updates a record by Record ID.
-
-DME-DeleteRecord - Removes a record by Record ID.
-
-
-
-
-
-
+- `Get-DMERecord`: Retrieves one or more records from a zone.
+- `Get-DMESandboxMode`: Returns the current API target ("Production" or "Sandbox")
+- `Get-DMEZone`: Retrieves one or more zones.
+- `Set-DMEREcord`: Updates one or more existing zone records.
+- `Set-DMESandboxMode`: Sets the current API target.
